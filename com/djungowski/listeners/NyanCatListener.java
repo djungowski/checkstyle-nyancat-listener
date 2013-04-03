@@ -11,11 +11,10 @@ import com.puppycrawl.tools.checkstyle.api.SeverityLevel;
  * Listener for checkstyle that prints Nyan Cat.
  *
  * @author Dominik Jungowski
+ * @see https://github.com/djungowski/checkstyle-nyancat-listener
  *
  */
-public class NyanCatListener
-    extends AutomaticBean
-    implements AuditListener
+public class NyanCatListener extends AutomaticBean implements AuditListener
 {
     /**
      * Writer to write to System.out.
