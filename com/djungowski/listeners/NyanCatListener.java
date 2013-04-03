@@ -21,6 +21,8 @@ public class NyanCatListener
 
     //private final String ESC = \x1b[;
     private final String ESC = "\u001b[";
+    private int currentTailLength = 8;
+    private final int maxTailLength = 50;
     private int catCalls = 0;
 
     public void auditStarted(AuditEvent aEvt)
@@ -64,15 +66,62 @@ public class NyanCatListener
 
     private void printOverrideSequence()
     {
-        mWriter.write(this.ESC + "4A");
+        if (this.catCalls > 0) {
+            mWriter.write(this.ESC + "4A");
+        }
     }
 
     private void printCatFace()
     {
         if (this.auditFinished && mTotalErrors > 0) {
-            mWriter.println("( o .o)");
+            mWriter.println("( o .o)  ");
         } else {
-            mWriter.println("( ^ .^)");
+            mWriter.println("( ^ .^)  ");
+        }
+    }
+
+    private void printTail(Integer tailLength)
+    {
+        int elementsWritten = 1;
+        String firstChar;
+        String secondChar;
+        String tail = "";
+
+        if (this.catCalls % 2 == 0) {
+            if (tailLength % 2 == 0) {
+                firstChar = "-";
+                secondChar = "_";
+            } else {
+                firstChar = "_";
+                secondChar = "-";
+            }
+        } else {
+            if (tailLength % 2 == 0) {
+                firstChar = "_";
+                secondChar = "-";
+            } else {
+                firstChar = "-";
+                secondChar = "_";
+            }
+        }
+
+        while (elementsWritten <= tailLength) {
+            elementsWritten++;
+            if (elementsWritten % 2 == 0) {
+                tail = tail + secondChar;
+            } else {
+                tail = tail + firstChar;
+            }
+        }
+
+        mWriter.print(tail);
+    }
+
+    private void lengthenTail()
+    {
+        // Lengthen tail by 2 if tail hasn't reached maximum length
+        if (this.currentTailLength < this.maxTailLength) {
+            this.currentTailLength += 4;
         }
     }
 
@@ -80,20 +129,29 @@ public class NyanCatListener
     {
         this.printOverrideSequence();
         if (this.catCalls %2 == 0) {
-            mWriter.println("-_-_-_-_,------,");
-            mWriter.println("-_-_-_-_|   /\\_/\\");
-            mWriter.print("-_-_-_-^|__");
+            this.printTail(this.currentTailLength);
+            mWriter.println(",------,");
+            this.printTail(this.currentTailLength);
+            mWriter.println("|   /\\_/\\  ");
+            this.printTail(this.currentTailLength - 1);
+            mWriter.print("^|__");
             this.printCatFace();
-            mWriter.println("-_-_-_-  \"\"  \"\"");
+            this.printTail(this.currentTailLength - 1);
+            mWriter.println("  \"\"  \"\"");
         } else {
-            mWriter.println("_-_-_-_-,------,");
-            mWriter.println("_-_-_-_-|   /\\_/\\");
-            mWriter.print("_-_-_-_^|__");
+            this.printTail(this.currentTailLength);
+            mWriter.println(",------,");
+            this.printTail(this.currentTailLength);
+            mWriter.println("|  /\\_/\\  ");
+            this.printTail(this.currentTailLength - 1);
+            mWriter.print("~|_");
             this.printCatFace();
-            mWriter.println("_-_-_-_  \"\"  \"\"");
+            this.printTail(this.currentTailLength - 1);
+            mWriter.println(" \"\"  \"\"  ");
         }
         mWriter.flush();
         this.catCalls++;
+        this.lengthenTail();
         
         try {
             Thread.sleep(100);
