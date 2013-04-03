@@ -1,6 +1,6 @@
 checkstyle-nyancat-listener
 ===========================
-And AuditListener for checkstyle printing the Nyan Cat
+An AuditListener for checkstyle printing the Nyan Cat
 
 
 Usage
@@ -17,13 +17,18 @@ If you insist on creating the jar file yourself, clone the git repo and type
 
 
 2. Add the jar file to your CLASSPATH
+-------------------------------------
 
 	export CLASSPATH=$CLASSPATH:~/junit/junit-4.10.jar:~/checkstyle/checkstyle-5.6/checkstyle-5.6-all.jar:~/checkstyle/nyan.jar
 
+
 3. Add Nyan Cat to your checkstyle XML File
+-------------------------------------------
 
 	<module name="com.djungowski.listeners.NyanCatListener" />
 
-4. Run checkstyle :-)
 
-(https://github.com/djungowski/checkstyle-nyancat-listener/raw/master/nyan.png)
+4. Run checkstyle :-)
+---------------------
+
+[![Nyan Cat in checkstyle](https://github.com/djungowski/checkstyle-nyancat-listener/raw/master/nyan.png)](https://github.com/djungowski/checkstyle-nyancat-listener/raw/master/nyan.png)
