@@ -1,8 +1,5 @@
 package com.djungowski.listeners;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 
 import com.puppycrawl.tools.checkstyle.api.AuditEvent;
@@ -10,69 +7,155 @@ import com.puppycrawl.tools.checkstyle.api.AuditListener;
 import com.puppycrawl.tools.checkstyle.api.AutomaticBean;
 import com.puppycrawl.tools.checkstyle.api.SeverityLevel;
 
+/**
+ * Listener for checkstyle that prints Nyan Cat.
+ *
+ * @author Dominik Jungowski
+ *
+ */
 public class NyanCatListener
     extends AutomaticBean
     implements AuditListener
 {
+    /**
+     * Writer to write to System.out.
+     */
     private PrintWriter mWriter = new PrintWriter(System.out);
-    private boolean auditFinished = false;
-    private int mTotalErrors;
-    private int mErrors;
 
-    //private final String ESC = \x1b[;
-    private final String ESC = "\u001b[";
+    /**
+     * Boolean to indicate whether the audit is finished.
+     */
+    private boolean auditFinished = false;
+
+    /**
+     * How many errors were found.
+     */
+    private int mTotalErrors;
+
+    /**
+     * The ESC key as Unicode.
+     */
+    private final String escape = "\u001b[";
+
+    /**
+     * Current length of the tail.
+     */
     private int currentTailLength = 8;
+
+    /**
+     * Maximum length of the tail.
+     */
     private final int maxTailLength = 50;
+
+    /**
+     * How many times the cat has been printed.
+     */
     private int catCalls = 0;
 
-    public void auditStarted(AuditEvent aEvt)
+    /**
+     * Value by how many chars the tail is lengthened after each step.
+     */
+    private final int lengthenStepSize = 4;
+
+    /**
+     * Dash.
+     */
+    private final String dash = "-";
+
+    /**
+     * Underscore.
+     */
+    private final String underscore = "_";
+
+    /**
+     * Number of milliseconds to sleep after each Nyan Cat output.
+     */
+    private final int sleepTime = 100;
+
+    /**
+     * When audit starts: print Nyan Cat.
+     *
+     * @param aEvt The audit event that occurs during the style check
+     */
+    public void auditStarted(final AuditEvent aEvt)
     {
         mTotalErrors = 0;
         this.printCat();
     }
 
-    public void auditFinished(AuditEvent aEvt)
+    /**
+     * When audit finishes: print Nyan Cat.
+     *
+     * @param aEvt The audit event that occurs during the style check
+     */
+    public void auditFinished(final AuditEvent aEvt)
     {
         this.auditFinished = true;
         this.printCat();
     }
 
-    public void fileStarted(AuditEvent aEvt)
+    /**
+     * When a file starts: print Nyan Cat.
+     *
+     * @param aEvt The audit event that occurs during the style check
+     */
+    public void fileStarted(final AuditEvent aEvt)
     {
         this.printCat();
     }
 
-    public void fileFinished(AuditEvent aEvt)
+    /**
+     * When a file finishes: print Nyan Cat.
+     *
+     * @param aEvt The audit event that occurs during the style check
+     */
+    public void fileFinished(final AuditEvent aEvt)
     {
         this.printCat();
     }
 
-    public void addError(AuditEvent aEvt)
+    /**
+     * When an error occurs: print Nyan Cat.
+     *
+     * @param aEvt The audit event that occurs during the style check
+     */
+    public void addError(final AuditEvent aEvt)
     {
         this.printCat();
         if (SeverityLevel.ERROR.equals(aEvt.getSeverityLevel())) {
-            mErrors++;
             mTotalErrors++;
         }
     }
 
-    public void addException(AuditEvent aEvt, Throwable aThrowable)
+    /**
+     * When en Exception is thrown: print Nyan Cat.
+     *
+     * @param aEvt The audit event that occurs during the style check
+     * @param aThrowable a throwable object
+     */
+    public void addException(final AuditEvent aEvt, final Throwable aThrowable)
     {
         this.printCat();
         aThrowable.printStackTrace(System.out);
-        mErrors++;
         mTotalErrors++;
     }
 
-    private void printOverrideSequence()
+    /**
+     * Write to console a command that enables overwriting the Nyan Cat.
+     */
+    private void printOverwriteSequence()
     {
         if (this.catCalls > 0) {
-            mWriter.write(this.ESC + "4A");
+            mWriter.write(this.escape + "4A");
         }
     }
 
+    /**
+     * Print the Cat Face depending on the Status of the Audit.
+     */
     private void printCatFace()
     {
+        // If the Audit is finished and there were errors, Nyan Cat is not amused
         if (this.auditFinished && mTotalErrors > 0) {
             mWriter.println("( o .o)  ");
         } else {
@@ -80,7 +163,12 @@ public class NyanCatListener
         }
     }
 
-    private void printTail(Integer tailLength)
+    /**
+     * Print the tail.
+     *
+     * @param tailLength    How long the tail should be
+     */
+    private void printTail(final Integer tailLength)
     {
         int elementsWritten = 1;
         String firstChar;
@@ -89,19 +177,19 @@ public class NyanCatListener
 
         if (this.catCalls % 2 == 0) {
             if (tailLength % 2 == 0) {
-                firstChar = "-";
-                secondChar = "_";
+                firstChar = this.dash;
+                secondChar = this.underscore;
             } else {
-                firstChar = "_";
-                secondChar = "-";
+                firstChar = this.underscore;
+                secondChar = this.dash;
             }
         } else {
             if (tailLength % 2 == 0) {
-                firstChar = "_";
-                secondChar = "-";
+                firstChar = this.underscore;
+                secondChar = this.dash;
             } else {
-                firstChar = "-";
-                secondChar = "_";
+                firstChar = this.dash;
+                secondChar = this.underscore;
             }
         }
 
@@ -117,17 +205,28 @@ public class NyanCatListener
         mWriter.print(tail);
     }
 
+    /**
+     * Lengthen the tail if it hasn't reached maximum length.
+     */
     private void lengthenTail()
     {
         // Lengthen tail by 2 if tail hasn't reached maximum length
         if (this.currentTailLength < this.maxTailLength) {
-            this.currentTailLength += 4;
+            this.currentTailLength += this.lengthenStepSize;
         }
     }
 
+    /**
+     * Print the Nyan Cat.
+     * _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-,------,
+     * _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-|   /\_/\
+     * -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^|__( o .o)
+     * -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-  ""  ""
+     *
+     */
     private void printCat()
     {
-        this.printOverrideSequence();
+        this.printOverwriteSequence();
         if (this.catCalls %2 == 0) {
             this.printTail(this.currentTailLength);
             mWriter.println(",------,");
@@ -152,9 +251,8 @@ public class NyanCatListener
         mWriter.flush();
         this.catCalls++;
         this.lengthenTail();
-        
         try {
-            Thread.sleep(100);
+            Thread.sleep(this.sleepTime);
         } catch(InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
