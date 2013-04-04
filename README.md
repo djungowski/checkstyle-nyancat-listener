@@ -13,7 +13,7 @@ Download the jar file: https://github.com/djungowski/checkstyle-nyancat-listener
 
 If you insist on creating the jar file yourself, clone the git repo and type
 
-	javac com/djungowski/listeners/NyanCatListener.java && jar cfv nyan.jar com/
+	javac com/djungowski/listeners/NyanCatListener.java && jar cf nyan.jar com/
 
 
 2. Add the jar file to your CLASSPATH
