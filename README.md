@@ -1,6 +1,6 @@
 checkstyle-nyancat-listener
 ===========================
-An AuditListener for checkstyle printing the Nyan Cat
+An AuditListener for checkstyle printing the Nyan Cat. This project was inspired by https://github.com/whatthejeff/nyancat-phpunit-resultprinter
 
 
 Usage
