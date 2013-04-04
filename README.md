@@ -31,10 +31,10 @@ If you insist on creating the jar file yourself, clone the git repo and type
 4. Run checkstyle :-)
 ---------------------
 
-[![Nyan Cat: Success!](https://github.com/djungowski/checkstyle-nyancat-listener/raw/master/nyan-fail.png)](https://github.com/djungowski/checkstyle-nyancat-listener/raw/master/nyan-fail.png)
+[![Nyan Cat: Success!](https://github.com/djungowski/checkstyle-nyancat-listener/raw/master/nyan-fail.gif)](https://github.com/djungowski/checkstyle-nyancat-listener/raw/master/nyan-fail.gif)
 
 O noes! You have checkstyle issues!
 
-[![Nyan Cat: Success!](https://github.com/djungowski/checkstyle-nyancat-listener/raw/master/nyan-success.png)](https://github.com/djungowski/checkstyle-nyancat-listener/raw/master/nyan-success.png)
+[![Nyan Cat: Success!](https://github.com/djungowski/checkstyle-nyancat-listener/raw/master/nyan-success.gif)](https://github.com/djungowski/checkstyle-nyancat-listener/raw/master/nyan-success.gif)
 
 Yay! \o/
