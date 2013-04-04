@@ -89,7 +89,7 @@ public class NyanCatListener extends AutomaticBean implements AuditListener
     /**
      * Number of milliseconds to sleep after each Nyan Cat output.
      */
-    private final int sleepTime = 100;
+    private final int sleepTime = 150;
 
     /**
      * When audit starts: print Nyan Cat.
