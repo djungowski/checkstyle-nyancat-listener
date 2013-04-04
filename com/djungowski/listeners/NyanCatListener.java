@@ -34,7 +34,12 @@ public class NyanCatListener extends AutomaticBean implements AuditListener
     /**
      * The ESC key as Unicode.
      */
-    private final String escape = "\u001b[";
+    private final String charEscape = "\u001b[";
+
+    /**
+     * Ansi Normal.
+     */
+    private final String charNormal = "\u001b[0m";
 
     /**
      * Current length of the tail.
@@ -65,6 +70,21 @@ public class NyanCatListener extends AutomaticBean implements AuditListener
      * Underscore.
      */
     private final String underscore = "_";
+
+    /**
+     * The currently used color.
+     */
+    private int currentColor;
+
+    /**
+     * Begin a new color every x chars.
+     */
+    private final int newColorEvery = 10;
+
+    /**
+     * How many times a char was printed colorized.
+     */
+    private int colorSteps = 0;
 
     /**
      * Number of milliseconds to sleep after each Nyan Cat output.
@@ -145,7 +165,7 @@ public class NyanCatListener extends AutomaticBean implements AuditListener
     private void printOverwriteSequence()
     {
         if (this.catCalls > 0) {
-            mWriter.write(this.escape + "4A");
+            mWriter.write(this.charEscape + "4A");
         }
     }
 
@@ -172,7 +192,6 @@ public class NyanCatListener extends AutomaticBean implements AuditListener
         int elementsWritten = 1;
         String firstChar;
         String secondChar;
-        String tail = "";
 
         if (this.catCalls % 2 == 0) {
             if (tailLength % 2 == 0) {
@@ -195,13 +214,42 @@ public class NyanCatListener extends AutomaticBean implements AuditListener
         while (elementsWritten <= tailLength) {
             elementsWritten++;
             if (elementsWritten % 2 == 0) {
-                tail = tail + secondChar;
+                this.printColorized(secondChar);
             } else {
-                tail = tail + firstChar;
+                this.printColorized(firstChar);
             }
         }
+    }
 
-        mWriter.print(tail);
+    /**
+     * Get a random color number.
+     *
+     * @return the color code
+     */
+    private int getRandomColor()
+    {
+        if (this.colorSteps % this.newColorEvery == 0) {
+            final int min = 31;
+            final int max = 36;
+
+            final int randomColor = min + (int)(Math.random() * ((max - min) + 1));
+            this.currentColor = randomColor;
+
+            return randomColor;
+        }
+
+        return this.currentColor;
+    }
+
+    /**
+     * Print a string in a specific color.
+     *
+     * @param word The string/word to be printed in color
+     */
+    private void printColorized(final String word)
+    {
+        mWriter.print(this.charEscape + this.getRandomColor() + "m" + word + this.charNormal);
+        this.colorSteps++;
     }
 
     /**
